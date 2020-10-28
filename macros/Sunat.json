@@ -1,0 +1,181 @@
+{
+  "Name": "Sunat",
+  "CreationDate": "2020-10-25",
+  "Commands": [
+    {
+      "Command": "comment",
+      "Target": "XClick // ComenzarAnyDesk.png",
+      "Value": "#doubleclick"
+    },
+    {
+      "Command": "comment",
+      "Target": "XClick // AnyDesk_Conexion_Maquina.png",
+      "Value": "#doubleclick"
+    },
+    {
+      "Command": "label",
+      "Target": "LECTURARUC",
+      "Value": "nextRuc"
+    },
+    {
+      "Command": "executeScript_Sandbox",
+      "Target": "function requestApi(method, async, data, uri) {\n    var url = 'http://ec2-3-15-43-237.us-east-2.compute.amazonaws.com/api/'+uri;\n    var req = new XMLHttpRequest();\n    req.open('GET', url, false); \n    req.send(null);\n  \tif (req.status != 200)\n  \t\treturn false;\n    return req;\n}\n\nfunction getNextRuc(onlyCheck) {\n\tif (onlyCheck) {\n\t\tvar onlyCheck = '?only_check='+onlyCheck;\n\t} else {\n\t\tvar onlyCheck = '';\n\t}\n\tvar information = requestApi('GET', false, {'only_check':true}, 'pending_task/next/claro'+onlyCheck );\n\tif (information) {\n\t\tvar taskInformation = JSON.parse(information.response);\n\t\treturn taskInformation ;\n\t} else {\n\t\treturn false;\n\t}\n}\n\nvar nextRuc = getNextRuc(true);\nif (nextRuc) {\n\treturn nextRuc.ruc;  \n} else {\n  return \"No hay mas\";\n}\n",
+      "Value": "nextRuc"
+    },
+    {
+      "Command": "if_v2",
+      "Target": "${nextRuc} == \"No hay mas\"",
+      "Value": ""
+    },
+    {
+      "Command": "gotoLabel",
+      "Target": "FIN",
+      "Value": ""
+    },
+    {
+      "Command": "end",
+      "Target": "${code} == \"\"",
+      "Value": ""
+    },
+    {
+      "Command": "comment",
+      "Target": "while_v2 // ${nextRuc} != \"No hay mas\"",
+      "Value": ""
+    },
+    {
+      "Command": "store",
+      "Target": "0",
+      "Value": "INTENTOS"
+    },
+    {
+      "Command": "label",
+      "Target": "INICIOINTENTOS",
+      "Value": ""
+    },
+    {
+      "Command": "executeScript",
+      "Target": "return parseInt(${INTENTOS}) + 1",
+      "Value": "INTENTOS"
+    },
+    {
+      "Command": "if_v2",
+      "Target": "${INTENTOS} == 3",
+      "Value": ""
+    },
+    {
+      "Command": "gotoLabel",
+      "Target": "LECTURARUC",
+      "Value": ""
+    },
+    {
+      "Command": "end",
+      "Target": "",
+      "Value": ""
+    },
+    {
+      "Command": "echo",
+      "Target": "${nextRuc}",
+      "Value": ""
+    },
+    {
+      "Command": "echo",
+      "Target": "${INTENTOS}",
+      "Value": ""
+    },
+    {
+      "Command": "open",
+      "Target": "https://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsruc/FrameCriterioBusquedaMovil.jsp",
+      "Value": ""
+    },
+    {
+      "Command": "type",
+      "Target": "id=txtRuc",
+      "Value": "${nextRuc}"
+    },
+    {
+      "Command": "OCRExtractRelative",
+      "Target": "pdfkgr_dpi_192.png",
+      "Value": "code"
+    },
+    {
+      "Command": "type",
+      "Target": "id=txtCodigo",
+      "Value": "${code}"
+    },
+    {
+      "Command": "if_v2",
+      "Target": "${code} == \"\"",
+      "Value": ""
+    },
+    {
+      "Command": "echo",
+      "Target": "No tenemo codigo",
+      "Value": ""
+    },
+    {
+      "Command": "gotoLabel",
+      "Target": "INICIOINTENTOS",
+      "Value": ""
+    },
+    {
+      "Command": "else",
+      "Target": "",
+      "Value": ""
+    },
+    {
+      "Command": "echo",
+      "Target": "Tenemo codigo",
+      "Value": ""
+    },
+    {
+      "Command": "end",
+      "Target": "",
+      "Value": ""
+    },
+    {
+      "Command": "XClick",
+      "Target": "ClickFormChico2.png",
+      "Value": ""
+    },
+    {
+      "Command": "label",
+      "Target": "ENVIODEINFORMACION",
+      "Value": ""
+    },
+    {
+      "Command": "executeScript_Sandbox",
+      "Target": "function sendInformation(id, lines)\n{\n\t//var result = requestApi('POST',false,{'id':id, 'sunat_lines_information_html':lines},'pending_task/resolve');\n\treturn lines;\n}\nfunction requestApi(method, async, data, uri) {\n    var url = 'http://ec2-3-15-43-237.us-east-2.compute.amazonaws.com/api/'+uri;\n    var req = new XMLHttpRequest();\n    req.open('GET', url, false); \n    req.send(null);\n  \tif (req.status != 200)\n  \t\treturn false;\n    return req;\n}\n\nvar information = window.document.body.innerHTML;\nreturn \"hola\";\nreturn sendInformation(0, window.btoa(unescape(encodeURIComponent(information))));",
+      "Value": "information"
+    },
+    {
+      "Command": "echo",
+      "Target": "${information}",
+      "Value": ""
+    },
+    {
+      "Command": "comment",
+      "Target": "assertAlert // Ingrese el código que se muestra en la imagen",
+      "Value": ""
+    },
+    {
+      "Command": "comment",
+      "Target": "onError // ",
+      "Value": ""
+    },
+    {
+      "Command": "comment",
+      "Target": "end // ",
+      "Value": ""
+    },
+    {
+      "Command": "gotoLabel",
+      "Target": "LECTURARUC",
+      "Value": ""
+    },
+    {
+      "Command": "label",
+      "Target": "FIN",
+      "Value": ""
+    }
+  ]
+}
